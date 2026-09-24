@@ -1,0 +1,5 @@
+package com.shopease.order.model;
+
+public class OrderItem {
+
+}

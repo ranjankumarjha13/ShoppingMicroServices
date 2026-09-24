@@ -1,0 +1,22 @@
+package com.shopease.auth.service;
+
+import com.shopease.auth.dto.RegisterRequest;
+import com.shopease.auth.model.User;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthService {
+
+    public User register(RegisterRequest request) {
+
+        User user = new User();
+
+        user.setId("USER-001");
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword("STATIC_PASSWORD");
+        user.setRole("USER");
+
+        return user;
+    }
+}

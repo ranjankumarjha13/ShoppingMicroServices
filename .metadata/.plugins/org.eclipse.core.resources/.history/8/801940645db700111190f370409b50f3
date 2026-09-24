@@ -1,0 +1,49 @@
+package com.shopease.auth.service;
+
+import com.shopease.auth.dto.RegisterRequest;
+import com.shopease.auth.model.User;
+import com.shopease.auth.repository.UserRepository;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public User register(RegisterRequest request) {
+
+        // Check username
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        // Check email
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = new User();
+
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+
+        // Encrypt password
+        user.setPassword(
+            passwordEncoder.encode(request.getPassword())
+        );
+
+        // Default role
+        user.setRole("USER");
+
+        return userRepository.save(user);
+    }
+}

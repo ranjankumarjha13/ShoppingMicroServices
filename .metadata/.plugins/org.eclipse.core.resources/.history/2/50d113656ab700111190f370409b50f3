@@ -1,0 +1,5 @@
+package com.shopease.gateway.security;
+
+public class JwtService {
+
+}

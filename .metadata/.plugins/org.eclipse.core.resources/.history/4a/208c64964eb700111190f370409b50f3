@@ -1,0 +1,131 @@
+package com.shopease.cart.service;
+
+import com.shopease.cart.model.Cart;
+import com.shopease.cart.model.CartItem;
+import com.shopease.cart.repository.CartRepository;
+
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+
+@Service
+public class CartService {
+
+    private final CartRepository cartRepository;
+
+    public CartService(CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
+
+    public Cart getCart(String userId) {
+
+        return cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+
+                    Cart cart = new Cart();
+
+                    cart.setUserId(userId);
+                    cart.setItems(new ArrayList<>());
+                    cart.setTotalAmount(0);
+
+                    return cartRepository.save(cart);
+                });
+    }
+
+    public Cart addToCart(
+            String userId,
+            CartItem newItem) {
+
+        Cart cart = getCart(userId);
+
+        boolean productExists = false;
+
+        for (CartItem item : cart.getItems()) {
+
+            if (item.getProductId()
+                    .equals(newItem.getProductId())) {
+
+                item.setQuantity(
+                        item.getQuantity()
+                                + newItem.getQuantity()
+                );
+
+                item.setTotalPrice(
+                        item.getPrice()
+                                * item.getQuantity()
+                );
+
+                productExists = true;
+                break;
+            }
+        }
+
+        if (!productExists) {
+            newItem.setTotalPrice(
+                    newItem.getPrice()
+                            * newItem.getQuantity()
+            );
+
+            cart.getItems().add(newItem);
+        }
+
+        calculateTotal(cart);
+
+        return cartRepository.save(cart);
+    }
+
+    public Cart updateQuantity(
+            String userId,
+            String productId,
+            int quantity) {
+
+        Cart cart = getCart(userId);
+
+        for (CartItem item : cart.getItems()) {
+
+            if (item.getProductId()
+                    .equals(productId)) {
+
+                item.setQuantity(quantity);
+
+                item.setTotalPrice(
+                        item.getPrice()
+                                * quantity
+                );
+
+                break;
+            }
+        }
+
+        calculateTotal(cart);
+
+        return cartRepository.save(cart);
+    }
+
+    public Cart removeFromCart(
+            String userId,
+            String productId) {
+
+        Cart cart = getCart(userId);
+
+        cart.getItems().removeIf(
+                item -> item.getProductId()
+                        .equals(productId)
+        );
+
+        calculateTotal(cart);
+
+        return cartRepository.save(cart);
+    }
+
+    private void calculateTotal(Cart cart) {
+
+        double total = 0;
+
+        for (CartItem item : cart.getItems()) {
+            total += item.getTotalPrice();
+        }
+
+        cart.setTotalAmount(total);
+    }
+}

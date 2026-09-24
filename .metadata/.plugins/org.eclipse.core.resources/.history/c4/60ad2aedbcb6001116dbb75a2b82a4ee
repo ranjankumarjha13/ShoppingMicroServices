@@ -1,0 +1,5 @@
+package com.shopease.cart.controller;
+
+public class CartController {
+
+}

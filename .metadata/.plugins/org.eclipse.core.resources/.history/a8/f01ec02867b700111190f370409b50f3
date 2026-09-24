@@ -1,0 +1,48 @@
+package com.shopease.auth.service;
+
+import com.shopease.auth.dto.LoginRequest;
+import com.shopease.auth.dto.RegisterRequest;
+import com.shopease.auth.model.User;
+import com.shopease.auth.security.JwtService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthService {
+
+    private final JwtService jwtService;
+
+    public AuthService(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
+
+    public User register(RegisterRequest request) {
+
+        User user = new User();
+
+        user.setId("USER-001");
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+
+        // Static password for now
+        user.setPassword("STATIC_PASSWORD");
+
+        user.setRole("USER");
+
+        return user;
+    }
+
+    public String login(LoginRequest request) {
+
+        // Static login validation for now
+        if ("ranjan".equals(request.getUsername())
+                && "admin123".equals(request.getPassword())) {
+
+            return jwtService.generateToken(
+                    request.getUsername(),
+                    "USER"
+            );
+        }
+
+        throw new RuntimeException("Invalid username or password");
+    }
+}

@@ -1,0 +1,5 @@
+package com.shopease.auth.dto;
+
+public class RegisterRequest {
+
+}

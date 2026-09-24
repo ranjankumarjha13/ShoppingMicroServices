@@ -1,0 +1,5 @@
+package com.shopease.auth.service;
+
+public class AuthService {
+
+}

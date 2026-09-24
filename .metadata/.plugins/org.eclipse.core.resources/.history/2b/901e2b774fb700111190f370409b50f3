@@ -1,0 +1,75 @@
+package com.shopease.order.service;
+
+import com.shopease.order.model.Order;
+import com.shopease.order.model.OrderItem;
+import com.shopease.order.repository.OrderRepository;
+
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    public Order createOrder(Order order) {
+
+        order.setOrderId("ORD-" + UUID.randomUUID());
+
+        order.setOrderDate(LocalDateTime.now());
+
+        order.setStatus("CREATED");
+
+        calculateTotal(order);
+
+        return orderRepository.save(order);
+    }
+
+    public Order getOrder(String orderId) {
+
+        return orderRepository.findByOrderId(orderId)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found"));
+    }
+
+    public List<Order> getOrdersByUser(String userId) {
+
+        return orderRepository.findByUserId(userId);
+    }
+
+    public Order updateStatus(String orderId, String status) {
+
+        Order order = getOrder(orderId);
+
+        order.setStatus(status);
+
+        return orderRepository.save(order);
+    }
+
+    private void calculateTotal(Order order) {
+
+        double total = 0;
+
+//        if (order.getItems() != null) {
+//
+//            for (OrderItem item : order.getItems()) {
+//
+//                double itemTotal =
+//                        item.getTotalPrice() * item.getQuantity();
+//
+//                item.setPrice(itemTotal);
+//
+//                total += itemTotal;
+//            }
+//        }
+
+        order.setTotalAmount(total);
+    }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.shopease.product.repositry.ProductRepository"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.shopease.auth.model.User"/>
+    <fullyQualifiedTypeName name="com.shopease.auth.dto.RegisterResponse"/>
+    <fullyQualifiedTypeName name="com.shopease.auth.dto.LoginRequest"/>
+    <fullyQualifiedTypeName name="com.shopease.auth.dto.AuthResponse"/>
+    <fullyQualifiedTypeName name="com.shopease.auth.service.JwtService"/>
+    <fullyQualifiedTypeName name="com.shopease.auth.security.JwtAuthenticationFilter"/>
+</qualifiedTypeNameHistroy>

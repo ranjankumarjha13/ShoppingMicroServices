@@ -1,0 +1,5 @@
+package com.shopease.auth.controller;
+
+public class AuthController {
+
+}
